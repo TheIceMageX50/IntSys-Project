@@ -5,28 +5,15 @@ import java.util.Scanner ;
  
 public class is11114401 
 {
-	public static void main(String[] args) throws Exception 
-	{
-		Scanner scanner ;
-		int[][] matrix ;
-		int row, colCount ;
-		String temp = "" ;
-		
-		try {
-			scanner = new Scanner(new File(args[0])) ;
-			
-			temp = scanner.nextLine() ;
-			colCount = (temp.length() + 1) / 2 ;
-			while(scanner.hasNext() == true) {
-				temp = scanner.nextLine() ;
-				if((temp.length() + 1) / 2 != colCount) {
-					//TODO make custom Exception
-					throw new Exception("Unequal row lengths") ;
-				}
+        public static void main(String[] args) throws IllegalDimensionsException 
+        {
+             try {
+				AdjacencyMatrix matrix = new AdjacencyMatrix(new File("adjacency matrix 65nodesalmost11clusters.txt")) ;
+			} catch (FileNotFoundException e) {
+				
+				e.printStackTrace();
+			} catch (NotSymmetricException e) {
+				System.out.println(e.getMessage()) ;
 			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        }
 }
