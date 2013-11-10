@@ -5,10 +5,12 @@ import java.util.Scanner;
 public class AdjacencyMatrix 
 {
 	private int[][] matrix ;
+	private int row, col ;
 	
 	public AdjacencyMatrix(File file) throws FileNotFoundException, 
 											 IllegalDimensionsException,
-											 NotSymmetricException
+											 NotSymmetricException, 
+											 NonZeroDiagonalException
 	{
 		Scanner scanner = new Scanner(file) ;
 		String temp ;
@@ -23,7 +25,7 @@ public class AdjacencyMatrix
         while(scanner.hasNext() == true) {
                 temp = scanner.nextLine() ;
                 if((temp.length() + 1) / 2 != colCount) {
-                        //If any any point the row length observed is not equal to the length
+                        //If at any point the row length observed is not equal to the length
                 	    //of the first row then the matrix is invalid.
                         throw new IllegalDimensionsException("Unequal row lengths") ;
                 }
@@ -45,19 +47,10 @@ public class AdjacencyMatrix
         }
         //If an exception has not been thrown and the program has got to this point, the matrix
         //is a valid square matrix and has been stored in memory. But is it symmetric?
-        
-        for(int i = 0 ; i < rowCount ; i++) {
-        	for(int j = 0 ; j < colCount ; j++) {
-        		if(i != j && matrix[i][j] != matrix[j][i]) {
-        			//If the current entry is not on the main diagonal, and given that current entry
-        			// is matrix[i][j] and it is not equal to matrix[j][i] then the matrix is not
-        			//symmetric.
-        			System.out.println("matrix[" + i + "][" + j + "] = " + matrix[i][j]) ;
-        			System.out.println("matrix[" + j + "][" + i + "] = " + matrix[j][i]) ;
-        			throw new NotSymmetricException("Matrix is not symmetric") ;
-        		}
-        	}
+        if(this.isSymmetricAndHasZeroDiagonal() == false) {
+        	throw new NotSymmetricException("Matrix is not symmetric") ;
         }
+        
 	}
 	
 	public void swapRowsAndCols(int val1, int val2)
@@ -69,10 +62,27 @@ public class AdjacencyMatrix
 			matrix[i][val1] = temp ;
 		}
 		
-		for(int i = 0 ; i < matrix.length ; i++) {
+		for(int i = 0 ; i < matrix.length ; i++) { 
 			temp = matrix[val2][i] ;
 			matrix[val2][i] = matrix[val1][i] ;
 			matrix[val1][i] = temp ;
 		}
+	}
+	
+	private boolean isSymmetricAndHasZeroDiagonal() throws NonZeroDiagonalException 
+	{
+		for(int i = 0 ; i < this.row ; i++) {
+        	for(int j = 0 ; j < this.col ; j++) {
+        		if(i != j && matrix[i][j] != matrix[j][i]) {
+        			//If the current entry is not on the main diagonal, and given that current entry
+        			// is matrix[i][j] and it is not equal to matrix[j][i] then the matrix is not
+        			//symmetric.
+        			return false ;
+        		} else if(i == j && matrix[i][j] != 0) {
+        			throw new NonZeroDiagonalException("Diagonal entries are not all zero.") ;
+        		}
+        	}
+        }
+		return true ;
 	}
 }
