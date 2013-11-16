@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class AdjacencyMatrix 
 {
 	private int[][] matrix ;
+	private int[] ordering ;
 	private int row, col ;
 	private int degree ;
 
@@ -32,6 +33,7 @@ public class AdjacencyMatrix
                 }
                 rowCount++ ;
         }
+        scanner.close() ;
         
         if(rowCount != colCount) {
         	throw new IllegalDimensionsException("Matrix must have equal amount of rows and columns") ;
@@ -46,6 +48,11 @@ public class AdjacencyMatrix
         	}
         	row++ ;
         }
+        scanner.close() ;
+        ordering = new int[matrix.length] ;
+        for(int i = 0 ; i < ordering.length ; i++) {
+        	ordering[i] = i ;
+        }
         //If an exception has not been thrown and the program has got to this point, the matrix
         //is a valid square matrix and has been stored in memory. But is it symmetric?
         if(this.isSymmetricAndHasZeroDiagonal() == false) {
@@ -55,7 +62,27 @@ public class AdjacencyMatrix
         degree = computeDegree() ;
 	}
 	
-	public void swapRowsAndCols(int val1, int val2)
+	public AdjacencyMatrix(AdjacencyMatrix original, int[] newOrdering)
+	{
+		matrix = original.matrix ;
+		ordering = newOrdering ;
+		
+		for(int i = 0 ; i < original.ordering.length ; i++) {
+			if(original.ordering[i] != ordering[i]) {
+				int val1 = original.ordering[i], 
+					val2 = ordering[i] ;
+				swapRowsAndCols(val1, val2);
+			}
+		}
+		degree = computeDegree() ;
+	}
+	
+	public int getDegree() 
+	{
+		return degree ;
+	}
+	
+	private void swapRowsAndCols(int val1, int val2)
 	{
 		int temp = 0 ;
 		for(int i = 0 ; i < matrix.length ; i++) {
@@ -80,9 +107,16 @@ public class AdjacencyMatrix
         		if(i != j && matrix[i][j] != matrix[j][i]) {
         			//If the current entry is not on the main diagonal, and given that current entry
         			//is matrix[i][j] and it is not equal to matrix[j][i] then the matrix is not
-        			//symmetric.
+        			//symmetric, so it must be fixed.
         			System.out.print("matrix[" + i + "][" + j + "] = " + matrix[i][j] + " ") ;
-        			System.out.println("matrix[" + j + "][" + i + "] = " + matrix[j][i]) ;
+        			System.out.println("matrix[" + j + "][" + i + "] = " + matrix[j][i] + "\n Fixing matrix to be "
+        					+ "symmetric...") ;
+        			
+        			if(matrix[i][j] == 0) {
+        				matrix[i][j] = 1 ;
+        			} else {
+        				matrix[j][i] = 1 ;
+        			}
 
         			if(execute == true) {
         				result = false ;
