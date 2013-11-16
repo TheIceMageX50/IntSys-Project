@@ -6,6 +6,8 @@ public class is11114401
 {
         public static void main(String[] args)
         {
+        	int[][][] generationArray = new int [60][100][65] ;
+        	
              try {
 				AdjacencyMatrix matrix = new AdjacencyMatrix(new File("adjacency matrix 65nodesalmost11clusters.txt")) ;
 			} catch (FileNotFoundException e) {

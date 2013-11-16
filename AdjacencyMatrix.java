@@ -6,7 +6,8 @@ public class AdjacencyMatrix
 {
 	private int[][] matrix ;
 	private int row, col ;
-	
+	private int degree ;
+
 	public AdjacencyMatrix(File file) throws FileNotFoundException, 
 											 IllegalDimensionsException,
 											 NotSymmetricException, 
@@ -51,6 +52,7 @@ public class AdjacencyMatrix
         	throw new NotSymmetricException("Matrix is not symmetric") ;
         }
         
+        degree = computeDegree() ;
 	}
 	
 	public void swapRowsAndCols(int val1, int val2)
@@ -71,18 +73,48 @@ public class AdjacencyMatrix
 	
 	private boolean isSymmetricAndHasZeroDiagonal() throws NonZeroDiagonalException 
 	{
+		boolean execute = true, result = true ;
+		
 		for(int i = 0 ; i < this.row ; i++) {
         	for(int j = 0 ; j < this.col ; j++) {
         		if(i != j && matrix[i][j] != matrix[j][i]) {
         			//If the current entry is not on the main diagonal, and given that current entry
-        			// is matrix[i][j] and it is not equal to matrix[j][i] then the matrix is not
+        			//is matrix[i][j] and it is not equal to matrix[j][i] then the matrix is not
         			//symmetric.
-        			return false ;
+        			System.out.print("matrix[" + i + "][" + j + "] = " + matrix[i][j] + " ") ;
+        			System.out.println("matrix[" + j + "][" + i + "] = " + matrix[j][i]) ;
+
+        			if(execute == true) {
+        				result = false ;
+        				//If any one entry comparison for symmetry returns false then there is
+        				//no point in setting result false again and again, so set execute to
+        				//to false to prevent this line from executing.
+        				execute = false ;
+        			}
+        		
+        		//If an entry on the main diagonal is not 0 then an exception is thrown.
         		} else if(i == j && matrix[i][j] != 0) {
         			throw new NonZeroDiagonalException("Diagonal entries are not all zero.") ;
         		}
         	}
         }
-		return true ;
+		return result ;
+	}
+	
+	private int computeDegree()
+	{
+		int output = 0 ;
+		
+		for(int i = 0 ; i < matrix.length ; i++) {
+			for(int j = 0 ; j < matrix.length ; j++) {
+				if(matrix[i][j] == 1) {
+					// + 1 adjustments within Math.abs() call to allow for the fact that Java
+					//array indexes start at 0.
+					output += Math.abs( (i + 1) - (j + 1) ) ;
+				}
+			}
+		}
+		
+		return output ;
 	}
 }
