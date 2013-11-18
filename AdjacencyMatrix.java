@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class AdjacencyMatrix 
 {
 	private int[][] matrix ;
-	private int[] ordering ;
+	private Integer[] ordering ;
 	private int row, col ;
 	private int degree ;
 
@@ -49,7 +49,7 @@ public class AdjacencyMatrix
         	row++ ;
         }
         scanner.close() ;
-        ordering = new int[matrix.length] ;
+        ordering = new Integer[matrix.length] ;
         for(int i = 0 ; i < ordering.length ; i++) {
         	ordering[i] = i ;
         }
@@ -62,7 +62,7 @@ public class AdjacencyMatrix
         degree = computeDegree() ;
 	}
 	
-	public AdjacencyMatrix(AdjacencyMatrix original, int[] newOrdering)
+	public AdjacencyMatrix(AdjacencyMatrix original, Integer[] newOrdering)
 	{
 		matrix = original.matrix ;
 		ordering = newOrdering ;
